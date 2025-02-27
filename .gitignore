@@ -1,0 +1,29 @@
+# Backend
+API/bin/
+API/obj/
+Application/bin/
+Application/obj/
+Domain/bin/
+Domain/obj/
+Infrastructure/bin/
+Infrastructure/obj/
+
+# Unit Tests
+CoffeeVendingMachineUnitTests/bin/
+CoffeeVendingMachineUnitTests/obj/
+
+# Frontend
+coffee-vending-machine-ui/node_modules/
+coffee-vending-machine-ui/build/
+coffee-vending-machine-ui/.env
+
+# CoffeeVendingMachine Folder
+.vs/
+CoffeeVendingMachine/obj/
+
+# General
+*.user
+*.suo
+*.cache
+*.log
+.DS_Store
