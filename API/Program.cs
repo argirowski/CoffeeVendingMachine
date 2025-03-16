@@ -1,6 +1,9 @@
 using Application.Features.Queries.GetAllCoffees;
 using Application.Mapping;
+using Application.Validators;
 using Domain.Interfaces;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Infrastructure;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Add FluentValidation and Validators
 builder.Services.AddControllers();
+builder.Services
+    .AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining<AddCoffeeCommandValidator>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
