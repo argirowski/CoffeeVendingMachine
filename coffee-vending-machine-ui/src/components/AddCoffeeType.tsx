@@ -5,35 +5,29 @@ import { useNavigate } from "react-router-dom";
 import ConfirmNavigationModal from "./modals/ConfirmNavigationModal";
 import { validationSchema } from "../utils/formUtils";
 import { addCoffeeType } from "../services/coffeeService";
+import { CoffeeTypeCreateDTO } from "../interfaces/interfaces";
 
 const AddCoffeeType: React.FC = () => {
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const initialValues = {
+  const initialValues: CoffeeTypeCreateDTO = {
     name: "",
-    dosesOfMilk: 0,
-    packsOfSugar: 0,
-    cinnamon: false,
-    stevia: false,
-    coconutMilk: false,
+    coffeeIngredient: {
+      dosesOfMilk: 0,
+      packsOfSugar: 0,
+      cinnamon: false,
+      stevia: false,
+      coconutMilk: false,
+    },
   };
 
   const onSubmit = async (
-    values: typeof initialValues,
-    { setSubmitting }: any
+    values: CoffeeTypeCreateDTO,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     try {
-      await addCoffeeType({
-        name: values.name,
-        coffeeIngredient: {
-          dosesOfMilk: values.dosesOfMilk,
-          packsOfSugar: values.packsOfSugar,
-          cinnamon: values.cinnamon,
-          stevia: values.stevia,
-          coconutMilk: values.coconutMilk,
-        },
-      });
+      await addCoffeeType(values);
       console.log("Coffee type added successfully");
       setSubmitting(false);
       navigate("/coffees");
@@ -82,14 +76,16 @@ const AddCoffeeType: React.FC = () => {
             <Row className="mt-3">
               <Col md={{ span: 8, offset: 2 }}>
                 <Form.Group className="mb-3">
-                  <Form.Label htmlFor="dosesOfMilk">Doses of Milk</Form.Label>
+                  <Form.Label htmlFor="coffeeIngredient.dosesOfMilk">
+                    Doses of Milk
+                  </Form.Label>
                   <Field
-                    name="dosesOfMilk"
+                    name="coffeeIngredient.dosesOfMilk"
                     type="number"
                     className="form-control"
                   />
                   <ErrorMessage
-                    name="dosesOfMilk"
+                    name="coffeeIngredient.dosesOfMilk"
                     component="div"
                     className="text-danger"
                   />
@@ -99,14 +95,16 @@ const AddCoffeeType: React.FC = () => {
             <Row className="mt-3">
               <Col md={{ span: 8, offset: 2 }}>
                 <Form.Group className="mb-3">
-                  <Form.Label htmlFor="packsOfSugar">Packs of Sugar</Form.Label>
+                  <Form.Label htmlFor="coffeeIngredient.packsOfSugar">
+                    Packs of Sugar
+                  </Form.Label>
                   <Field
-                    name="packsOfSugar"
+                    name="coffeeIngredient.packsOfSugar"
                     type="number"
                     className="form-control"
                   />
                   <ErrorMessage
-                    name="packsOfSugar"
+                    name="coffeeIngredient.packsOfSugar"
                     component="div"
                     className="text-danger"
                   />
@@ -119,11 +117,11 @@ const AddCoffeeType: React.FC = () => {
                   <Form.Check
                     type="checkbox"
                     label="Cinnamon"
-                    name="cinnamon"
+                    name="coffeeIngredient.cinnamon"
                     as={Field}
                   />
                   <ErrorMessage
-                    name="cinnamon"
+                    name="coffeeIngredient.cinnamon"
                     component="div"
                     className="text-danger"
                   />
@@ -136,11 +134,11 @@ const AddCoffeeType: React.FC = () => {
                   <Form.Check
                     type="checkbox"
                     label="Stevia"
-                    name="stevia"
+                    name="coffeeIngredient.stevia"
                     as={Field}
                   />
                   <ErrorMessage
-                    name="stevia"
+                    name="coffeeIngredient.stevia"
                     component="div"
                     className="text-danger"
                   />
@@ -153,11 +151,11 @@ const AddCoffeeType: React.FC = () => {
                   <Form.Check
                     type="checkbox"
                     label="Coconut Milk"
-                    name="coconutMilk"
+                    name="coffeeIngredient.coconutMilk"
                     as={Field}
                   />
                   <ErrorMessage
-                    name="coconutMilk"
+                    name="coffeeIngredient.coconutMilk"
                     component="div"
                     className="text-danger"
                   />

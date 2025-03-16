@@ -7,16 +7,20 @@ import ConfirmNavigationModal from "./modals/ConfirmNavigationModal";
 import { validationSchema } from "../utils/formUtils";
 import LoadingSpinner from "./loader/LoadingSpinner";
 import { fetchCoffeeTypeById } from "../services/coffeeService";
+import { CoffeeTypeDTO } from "../interfaces/interfaces";
 
 const EditCoffeeType: React.FC = () => {
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-  const [initialValues, setInitialValues] = useState({
+  const [initialValues, setInitialValues] = useState<CoffeeTypeDTO>({
+    id: "",
     name: "",
-    dosesOfMilk: 0,
-    packsOfSugar: 0,
-    cinnamon: false,
-    stevia: false,
-    coconutMilk: false,
+    coffeeIngredient: {
+      dosesOfMilk: 0,
+      packsOfSugar: 0,
+      cinnamon: false,
+      stevia: false,
+      coconutMilk: false,
+    },
   });
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -27,12 +31,15 @@ const EditCoffeeType: React.FC = () => {
       try {
         const coffeeType = await fetchCoffeeTypeById(id!);
         setInitialValues({
+          id: coffeeType.id,
           name: coffeeType.name,
-          dosesOfMilk: coffeeType.coffeeIngredient.dosesOfMilk,
-          packsOfSugar: coffeeType.coffeeIngredient.packsOfSugar,
-          cinnamon: coffeeType.coffeeIngredient.cinnamon,
-          stevia: coffeeType.coffeeIngredient.stevia,
-          coconutMilk: coffeeType.coffeeIngredient.coconutMilk,
+          coffeeIngredient: {
+            dosesOfMilk: coffeeType.coffeeIngredient.dosesOfMilk,
+            packsOfSugar: coffeeType.coffeeIngredient.packsOfSugar,
+            cinnamon: coffeeType.coffeeIngredient.cinnamon,
+            stevia: coffeeType.coffeeIngredient.stevia,
+            coconutMilk: coffeeType.coffeeIngredient.coconutMilk,
+          },
         });
         setLoading(false);
       } catch (error) {
@@ -44,17 +51,20 @@ const EditCoffeeType: React.FC = () => {
     loadCoffeeType();
   }, [id]);
 
-  const onSubmit = (values: typeof initialValues, { setSubmitting }: any) => {
+  const onSubmit = (
+    values: CoffeeTypeDTO,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  ) => {
     axios
       .put(`https://localhost:7285/api/Coffee/${id}`, {
-        id: id,
+        id: values.id,
         name: values.name,
         coffeeIngredient: {
-          dosesOfMilk: values.dosesOfMilk,
-          packsOfSugar: values.packsOfSugar,
-          cinnamon: values.cinnamon,
-          stevia: values.stevia,
-          coconutMilk: values.coconutMilk,
+          dosesOfMilk: values.coffeeIngredient.dosesOfMilk,
+          packsOfSugar: values.coffeeIngredient.packsOfSugar,
+          cinnamon: values.coffeeIngredient.cinnamon,
+          stevia: values.coffeeIngredient.stevia,
+          coconutMilk: values.coffeeIngredient.coconutMilk,
         },
       })
       .then((response) => {
@@ -112,14 +122,16 @@ const EditCoffeeType: React.FC = () => {
             <Row className="mt-3">
               <Col md={{ span: 8, offset: 2 }}>
                 <Form.Group className="mb-3">
-                  <Form.Label htmlFor="dosesOfMilk">Doses of Milk</Form.Label>
+                  <Form.Label htmlFor="coffeeIngredient.dosesOfMilk">
+                    Doses of Milk
+                  </Form.Label>
                   <Field
-                    name="dosesOfMilk"
+                    name="coffeeIngredient.dosesOfMilk"
                     type="number"
                     className="form-control"
                   />
                   <ErrorMessage
-                    name="dosesOfMilk"
+                    name="coffeeIngredient.dosesOfMilk"
                     component="div"
                     className="text-danger"
                   />
@@ -129,14 +141,16 @@ const EditCoffeeType: React.FC = () => {
             <Row className="mt-3">
               <Col md={{ span: 8, offset: 2 }}>
                 <Form.Group className="mb-3">
-                  <Form.Label htmlFor="packsOfSugar">Packs of Sugar</Form.Label>
+                  <Form.Label htmlFor="coffeeIngredient.packsOfSugar">
+                    Packs of Sugar
+                  </Form.Label>
                   <Field
-                    name="packsOfSugar"
+                    name="coffeeIngredient.packsOfSugar"
                     type="number"
                     className="form-control"
                   />
                   <ErrorMessage
-                    name="packsOfSugar"
+                    name="coffeeIngredient.packsOfSugar"
                     component="div"
                     className="text-danger"
                   />
@@ -149,11 +163,11 @@ const EditCoffeeType: React.FC = () => {
                   <Form.Check
                     type="checkbox"
                     label="Cinnamon"
-                    name="cinnamon"
+                    name="coffeeIngredient.cinnamon"
                     as={Field}
                   />
                   <ErrorMessage
-                    name="cinnamon"
+                    name="coffeeIngredient.cinnamon"
                     component="div"
                     className="text-danger"
                   />
@@ -166,11 +180,11 @@ const EditCoffeeType: React.FC = () => {
                   <Form.Check
                     type="checkbox"
                     label="Stevia"
-                    name="stevia"
+                    name="coffeeIngredient.stevia"
                     as={Field}
                   />
                   <ErrorMessage
-                    name="stevia"
+                    name="coffeeIngredient.stevia"
                     component="div"
                     className="text-danger"
                   />
@@ -183,11 +197,11 @@ const EditCoffeeType: React.FC = () => {
                   <Form.Check
                     type="checkbox"
                     label="Coconut Milk"
-                    name="coconutMilk"
+                    name="coffeeIngredient.coconutMilk"
                     as={Field}
                   />
                   <ErrorMessage
-                    name="coconutMilk"
+                    name="coffeeIngredient.coconutMilk"
                     component="div"
                     className="text-danger"
                   />
