@@ -1,0 +1,24 @@
+📌 Coffee Vending Machine Assignment
+Build a small application for a Coffee Vending Machine with the following criteria:
+
+🛠 Requirements
+
+1️⃣ Predefined Coffee Types
+The vending machine should allow the user to pick from a predefined list of at least 5 coffee types (e.g., Latte, Macchiato, Espresso, Americano). Each coffee has its own characteristics (e.g., single dose of milk, one pack of sugar).
+
+2️⃣ Internet Connectivity
+The vending machine should connect to the internet, enabling the user to choose different types of coffee sourced from third-party systems (e.g., databases, APIs).
+
+3️⃣ Customization Options
+The vending machine should allow users to customize or enhance a basic coffee by adding predefined characteristics (e.g., sugar, creamer, more milk, caramel), making it possible to create unique types of coffee.
+
+🖥 Technical Requirement Information
+✔ Demonstrate your understanding of software design best practices and Object-Oriented Programming (OOP) principles. Follow SOLID principles to produce well-structured and maintainable code.
+✔ Write the application as a Console C# application. Alternatively, feel free to use a UI technology of your choice.
+✔ Use a database or data source (e.g., API, JSON, XML) to cover the second requirement regarding coffee options from third-party sources.
+✔ For the customization feature, choose and implement an appropriate Design Pattern.
+
+📋 Additional Points to Cover
+✅ Cover the main application logic with Unit Tests. Implementation of additional test types (e.g., Integration, API) will be considered a plus.
+✅ Describe the technologies you would use if building a real-life application.
+✅ Specify which cloud services you would use for a real-life application (preferred cloud provider: Azure).
