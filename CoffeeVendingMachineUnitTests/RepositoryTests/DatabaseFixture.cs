@@ -1,5 +1,5 @@
-﻿using Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Persistence;
 
 namespace CoffeeVendingMachineUnitTests.RepositoryTests
 {

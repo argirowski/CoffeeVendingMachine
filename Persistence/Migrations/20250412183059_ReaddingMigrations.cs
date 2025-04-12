@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Infrastructure.Migrations
+namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class ReaddingMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,33 +34,16 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CoffeeTypes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CoffeeIngredientTypes",
-                columns: table => new
-                {
-                    CoffeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CoffeeIngredientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CoffeeIngredientTypes", x => new { x.CoffeeId, x.CoffeeIngredientId });
+                    table.PrimaryKey("PK_CoffeeTypes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CoffeeIngredientTypes_CoffeeIngredients_CoffeeIngredientId",
+                        name: "FK_CoffeeTypes_CoffeeIngredients_CoffeeIngredientId",
                         column: x => x.CoffeeIngredientId,
                         principalTable: "CoffeeIngredients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CoffeeIngredientTypes_CoffeeTypes_CoffeeId",
-                        column: x => x.CoffeeId,
-                        principalTable: "CoffeeTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -77,41 +60,29 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "CoffeeTypes",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "CoffeeIngredientId", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("49ed75aa-0a08-40c8-92ed-cd88a68f564d"), "Espresso" },
-                    { new Guid("5cd91938-abc4-440f-b3c1-52371516bf8d"), "Americano" },
-                    { new Guid("8f516d6a-e1b3-4d66-b0d7-f9b40cdcdb04"), "Caffè Crema" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "CoffeeIngredientTypes",
-                columns: new[] { "CoffeeId", "CoffeeIngredientId" },
-                values: new object[,]
-                {
-                    { new Guid("49ed75aa-0a08-40c8-92ed-cd88a68f564d"), new Guid("587cdc3e-40a8-43f1-b67e-251292d94f3e") },
-                    { new Guid("5cd91938-abc4-440f-b3c1-52371516bf8d"), new Guid("f0ca2d3e-554f-459e-9045-dce2d5ab616b") },
-                    { new Guid("8f516d6a-e1b3-4d66-b0d7-f9b40cdcdb04"), new Guid("ea3cf94a-7ab6-4347-a0a2-b8f32d2ba51b") }
+                    { new Guid("49ed75aa-0a08-40c8-92ed-cd88a68f564d"), new Guid("587cdc3e-40a8-43f1-b67e-251292d94f3e"), "Espresso" },
+                    { new Guid("5cd91938-abc4-440f-b3c1-52371516bf8d"), new Guid("f0ca2d3e-554f-459e-9045-dce2d5ab616b"), "Americano" },
+                    { new Guid("8f516d6a-e1b3-4d66-b0d7-f9b40cdcdb04"), new Guid("ea3cf94a-7ab6-4347-a0a2-b8f32d2ba51b"), "Caffè Crema" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CoffeeIngredientTypes_CoffeeIngredientId",
-                table: "CoffeeIngredientTypes",
-                column: "CoffeeIngredientId");
+                name: "IX_CoffeeTypes_CoffeeIngredientId",
+                table: "CoffeeTypes",
+                column: "CoffeeIngredientId",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CoffeeIngredientTypes");
+                name: "CoffeeTypes");
 
             migrationBuilder.DropTable(
                 name: "CoffeeIngredients");
-
-            migrationBuilder.DropTable(
-                name: "CoffeeTypes");
         }
     }
 }

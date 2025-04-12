@@ -1,12 +1,13 @@
+using API.Middleware;
 using Application.Features.Queries.GetAllCoffees;
 using Application.Mapping;
 using Application.Validators;
 using Domain.Interfaces;
 using FluentValidation;
-using FluentValidation.AspNetCore;
-using Infrastructure;
-using Infrastructure.Repositories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Persistence;
+using Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add FluentValidation and Validators
 builder.Services.AddControllers();
-builder.Services
-    .AddFluentValidationAutoValidation()
-    .AddFluentValidationClientsideAdapters();
 
 builder.Services.AddValidatorsFromAssemblyContaining<AddCoffeeCommandValidator>();
 
@@ -46,6 +44,9 @@ builder.Services.AddMediatR(options =>
 });
 builder.Services.AddScoped<ICoffeeRepository, CoffeeRepository>();
 
+// Register ValidationBehaviour in the MediatR pipeline
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
 var app = builder.Build();
 
 // Ensure database is created and seeded
@@ -63,6 +64,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("CorsPolicy"); // enable CORS => This should come before UseHttpsRedirection
+
+// Add middleware to handle exceptions and return proper JSON responses
+app.UseMiddleware<ValidationExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

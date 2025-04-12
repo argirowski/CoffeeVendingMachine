@@ -1,11 +1,6 @@
 ﻿using Domain.Entities;
-using Infrastructure;
-using Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
+using Persistence.Repositories;
+using Persistence;
 
 namespace CoffeeVendingMachineUnitTests.RepositoryTests
 {
