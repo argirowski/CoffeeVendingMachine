@@ -1,4 +1,5 @@
 # Backend
+obj/
 API/bin/
 API/obj/
 Application/bin/
