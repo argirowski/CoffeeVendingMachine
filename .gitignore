@@ -1,6 +1,4 @@
 # Backend
-/bin/
-/obj/
 API/bin/
 API/obj/
 Application/bin/
@@ -24,6 +22,8 @@ coffee-vending-machine-ui/.env
 CoffeeVendingMachine/obj/
 
 # General
+bin/
+obj/
 *.user
 *.suo
 *.cache
