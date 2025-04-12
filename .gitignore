@@ -5,8 +5,8 @@ Application/bin/
 Application/obj/
 Domain/bin/
 Domain/obj/
-Infrastructure/bin/
-Infrastructure/obj/
+Persistence/bin/
+Persistence/obj/
 
 # Unit Tests
 CoffeeVendingMachineUnitTests/bin/
