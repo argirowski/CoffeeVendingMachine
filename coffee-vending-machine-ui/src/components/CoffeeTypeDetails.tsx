@@ -62,7 +62,7 @@ const CoffeeTypeDetails: React.FC = () => {
                   className="me-3"
                   size="lg"
                 >
-                  Edit Book
+                  Edit Coffee
                 </Button>
                 <Button
                   variant="secondary"

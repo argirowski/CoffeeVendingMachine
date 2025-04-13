@@ -19,11 +19,10 @@ coffee-vending-machine-ui/.env
 
 # CoffeeVendingMachine Folder
 .vs/
-CoffeeVendingMachine/obj/
-
-# General
 bin/
 obj/
+
+# General
 *.user
 *.suo
 *.cache
