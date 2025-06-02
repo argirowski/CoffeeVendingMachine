@@ -12,11 +12,10 @@ namespace Application.Validators
         {
             _coffeeRepository = coffeeRepository;
 
-            RuleFor(x => x.CoffeeType).NotNull();
-            RuleFor(x => x.CoffeeType.Id)
+            RuleFor(x => x.Id)
                 .SetValidator(new BaseIdValidator(_coffeeRepository));
-            RuleFor(x => x.CoffeeType.Name).NotEmpty().WithMessage("Coffee name is required.");
-            RuleFor(x => x.CoffeeType.CoffeeIngredient).SetValidator(new BaseCoffeeIngredientValidator());
+            RuleFor(x => x.Name).NotEmpty().WithMessage("Coffee name is required.");
+            RuleFor(x => x.CoffeeIngredient).SetValidator(new BaseCoffeeIngredientValidator());
         }
     }
 }

@@ -44,9 +44,9 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CoffeeTypeDTO>> UpdateCoffee(Guid id, [FromBody] CoffeeTypeDTO coffeeTypeDTO)
+        public async Task<ActionResult<CoffeeTypeDTO>> UpdateCoffee(Guid id, [FromBody] UpdateCoffeeCommand command)
         {
-            var command = new UpdateCoffeeCommand(coffeeTypeDTO);
+            command.Id = id; // Ensure the command has the correct ID
             var result = await _mediator.Send(command);
             return Ok(result);
         }

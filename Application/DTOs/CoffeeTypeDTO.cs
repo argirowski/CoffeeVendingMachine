@@ -3,7 +3,7 @@
     public class CoffeeTypeDTO
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public CoffeeIngredientDTO CoffeeIngredient { get; set; }
+        public required string Name { get; set; }
+        public required CoffeeIngredientDTO CoffeeIngredient { get; set; }
     }
 }

@@ -8,6 +8,6 @@
         public bool Cinnamon { get; set; }
         public bool Stevia { get; set; }
         public bool CoconutMilk { get; set; }
-        public CoffeeType CoffeeType { get; set; }
+        public CoffeeType? CoffeeType { get; set; }
     }
 }

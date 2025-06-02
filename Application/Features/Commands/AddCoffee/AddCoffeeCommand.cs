@@ -5,7 +5,7 @@ namespace Application.Features.Commands.AddCoffee
 {
     public class AddCoffeeCommand : IRequest<Guid>
     {
-        public string Name { get; set; }
-        public CoffeeIngredientDTO CoffeeIngredient { get; set; }
+        public required string Name { get; set; }
+        public required CoffeeIngredientDTO CoffeeIngredient { get; set; }
     }
 }

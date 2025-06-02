@@ -21,7 +21,7 @@ namespace Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<CoffeeType> GetCoffeeByIdAsync(Guid id)
+        public async Task<CoffeeType?> GetCoffeeByIdAsync(Guid id)
         {
             return await _context.CoffeeTypes
                 .Include(ct => ct.CoffeeIngredient)
