@@ -1,9 +1,10 @@
-﻿using Application.DTOs;
+using Application.DTOs;
 using Application.Features.Commands.UpdateCoffee;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Moq;
+using Xunit;
 
 namespace CoffeeVendingMachineUnitTests.HandlerTests
 {
@@ -21,32 +22,67 @@ namespace CoffeeVendingMachineUnitTests.HandlerTests
         }
 
         [Fact]
-        public async Task Handle_UpdatesCoffeeType_WhenCoffeeTypeExists()
+        public async Task Handle_UpdatesCoffeeAndReturnsDto()
         {
             // Arrange
             var coffeeId = Guid.NewGuid();
-            var coffeeType = new CoffeeType { Id = coffeeId, Name = "Espresso", CoffeeIngredient = new CoffeeIngredient() };
-            var coffeeTypeDTO = new CoffeeTypeDTO { Id = coffeeId, Name = "Espresso", CoffeeIngredient = new CoffeeIngredientDTO() };
-            var command = new UpdateCoffeeCommand(coffeeTypeDTO);
+            var command = new UpdateCoffeeCommand
+            {
+                Id = coffeeId,
+                Name = "Updated Espresso",
+                CoffeeIngredient = new CoffeeIngredientDTO
+                {
+                    DosesOfMilk = 2,
+                    PacksOfSugar = 1,
+                    Cinnamon = true,
+                    Stevia = false,
+                    CoconutMilk = false
+                }
+            };
 
-            _coffeeRepositoryMock.Setup(repo => repo.GetCoffeeByIdAsync(coffeeId))
-                                 .ReturnsAsync(coffeeType);
-            _mapperMock.Setup(mapper => mapper.Map(command.CoffeeType, coffeeType));
-            _mapperMock.Setup(mapper => mapper.Map(command.CoffeeType.CoffeeIngredient, coffeeType.CoffeeIngredient));
-            _coffeeRepositoryMock.Setup(repo => repo.UpdateCoffeeAsync(coffeeType))
-                                 .Returns(Task.CompletedTask);
-            _mapperMock.Setup(mapper => mapper.Map<CoffeeTypeDTO>(coffeeType))
-                       .Returns(coffeeTypeDTO);
+            var coffeeEntity = new CoffeeType
+            {
+                Id = coffeeId,
+                Name = "Old Espresso",
+                CoffeeIngredient = new CoffeeIngredient
+                {
+                    DosesOfMilk = 1,
+                    PacksOfSugar = 2,
+                    Cinnamon = false,
+                    Stevia = true,
+                    CoconutMilk = true
+                }
+            };
+
+            var expectedDto = new CoffeeTypeDTO
+            {
+                Id = coffeeId,
+                Name = "Updated Espresso",
+                CoffeeIngredient = command.CoffeeIngredient
+            };
+
+            _coffeeRepositoryMock.Setup(r => r.GetCoffeeByIdAsync(coffeeId))
+                .ReturnsAsync(coffeeEntity);
+
+            _mapperMock.Setup(m => m.Map<CoffeeTypeDTO>(It.IsAny<CoffeeType>()))
+                .Returns(expectedDto);
 
             // Act
-            var result = await _handler.Handle(command, CancellationToken.None);
+            var result = await _handler.Handle(command, default);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(coffeeId, result.Id);
-            Assert.Equal("Espresso", result.Name);
-            _coffeeRepositoryMock.Verify(repo => repo.GetCoffeeByIdAsync(coffeeId), Times.Once);
-            _coffeeRepositoryMock.Verify(repo => repo.UpdateCoffeeAsync(coffeeType), Times.Once);
+            _coffeeRepositoryMock.Verify(r => r.UpdateCoffeeAsync(It.Is<CoffeeType>(c =>
+                c.Name == "Updated Espresso" &&
+                c.CoffeeIngredient.DosesOfMilk == 2 &&
+                c.CoffeeIngredient.PacksOfSugar == 1 &&
+                c.CoffeeIngredient.Cinnamon == true &&
+                c.CoffeeIngredient.Stevia == false &&
+                c.CoffeeIngredient.CoconutMilk == false
+            )), Times.Once);
+
+            Assert.Equal(expectedDto.Id, result.Id);
+            Assert.Equal(expectedDto.Name, result.Name);
+            Assert.Equal(expectedDto.CoffeeIngredient.DosesOfMilk, result.CoffeeIngredient.DosesOfMilk);
         }
     }
 }

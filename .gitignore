@@ -11,6 +11,8 @@ Persistence/obj/
 # Unit Tests
 CoffeeVendingMachineUnitTests/bin/
 CoffeeVendingMachineUnitTests/obj/
+CoffeeVendingMachineUnitTests/TestResults/
+CoffeeVendingMachineUnitTests/coveragereport/
 
 # Frontend
 coffee-vending-machine-ui/node_modules/

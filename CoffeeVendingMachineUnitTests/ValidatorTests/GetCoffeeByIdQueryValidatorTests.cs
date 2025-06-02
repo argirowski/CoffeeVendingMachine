@@ -55,7 +55,11 @@ namespace CoffeeVendingMachineUnitTests.ValidatorTests
             // Arrange
             var coffeeId = Guid.NewGuid();
             _coffeeRepositoryMock.Setup(repo => repo.GetCoffeeByIdAsync(coffeeId))
-                                 .ReturnsAsync(new CoffeeType());
+                                 .ReturnsAsync(new CoffeeType
+                                 {
+                                     Id = coffeeId,
+                                     Name = "Espresso"
+                                 });
             var query = new GetCoffeeByIdQuery(coffeeId);
 
             // Act

@@ -80,24 +80,6 @@ namespace CoffeeVendingMachineUnitTests.ControllerTests
         }
 
         [Fact]
-        public async Task UpdateCoffee_ReturnsOkResult_WithUpdatedCoffee()
-        {
-            // Arrange
-            var coffeeId = Guid.NewGuid();
-            var coffeeTypeDTO = new CoffeeTypeDTO { Id = coffeeId, Name = "Espresso", CoffeeIngredient = new CoffeeIngredientDTO() };
-            _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateCoffeeCommand>(), It.IsAny<CancellationToken>()))
-                         .ReturnsAsync(coffeeTypeDTO);
-
-            // Act
-            var result = await _controller.UpdateCoffee(coffeeId, coffeeTypeDTO);
-
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var returnValue = Assert.IsType<CoffeeTypeDTO>(okResult.Value);
-            Assert.Equal(coffeeId, returnValue.Id);
-        }
-
-        [Fact]
         public async Task DeleteCoffee_ReturnsNoContentResult()
         {
             // Arrange
@@ -111,6 +93,45 @@ namespace CoffeeVendingMachineUnitTests.ControllerTests
 
             // Assert
             Assert.IsType<NoContentResult>(result);
+        }
+
+        [Fact]
+        public async Task UpdateCoffee_ReturnsOkResult_WithUpdatedCoffee()
+        {
+            // Arrange
+            var coffeeId = Guid.NewGuid();
+            var command = new UpdateCoffeeCommand
+            {
+                Id = coffeeId,
+                Name = "Updated Espresso",
+                CoffeeIngredient = new CoffeeIngredientDTO
+                {
+                    DosesOfMilk = 2,
+                    PacksOfSugar = 1,
+                    Cinnamon = true,
+                    Stevia = false,
+                    CoconutMilk = false
+                }
+            };
+            var updatedCoffee = new CoffeeTypeDTO
+            {
+                Id = coffeeId,
+                Name = "Updated Espresso",
+                CoffeeIngredient = command.CoffeeIngredient
+            };
+
+            _mediatorMock.Setup(m => m.Send(It.Is<UpdateCoffeeCommand>(c => c.Id == coffeeId), It.IsAny<CancellationToken>()))
+                         .ReturnsAsync(updatedCoffee);
+
+            // Act
+            var result = await _controller.UpdateCoffee(coffeeId, command);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var returnValue = Assert.IsType<CoffeeTypeDTO>(okResult.Value);
+            Assert.Equal(coffeeId, returnValue.Id);
+            Assert.Equal("Updated Espresso", returnValue.Name);
+            Assert.Equal(2, returnValue.CoffeeIngredient.DosesOfMilk);
         }
     }
 }
