@@ -6,6 +6,7 @@ using Application.Features.Queries.GetAllCoffees;
 using Application.Features.Queries.GetSingleCoffee;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace API.Controllers
 {
@@ -14,10 +15,12 @@ namespace API.Controllers
     public class CoffeeController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public CoffeeController(IMediator mediator)
+        public CoffeeController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -37,16 +40,18 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCoffee([FromBody] AddCoffeeCommand command)
+        public async Task<IActionResult> AddCoffee([FromBody] AddCoffeeDTO dto)
         {
+            var command = _mapper.Map<AddCoffeeCommand>(dto);
             var coffeeTypeId = await _mediator.Send(command);
             return Ok(coffeeTypeId);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CoffeeTypeDTO>> UpdateCoffee(Guid id, [FromBody] UpdateCoffeeCommand command)
+        public async Task<ActionResult<CoffeeTypeDTO>> UpdateCoffee(Guid id, [FromBody] UpdateCoffeeDTO dto)
         {
-            command.Id = id; // Ensure the command has the correct ID
+            var command = _mapper.Map<UpdateCoffeeCommand>(dto);
+            command.Id = id;
             var result = await _mediator.Send(command);
             return Ok(result);
         }

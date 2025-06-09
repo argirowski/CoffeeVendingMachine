@@ -1,4 +1,6 @@
 ﻿using Application.DTOs;
+using Application.Features.Commands.AddCoffee;
+using Application.Features.Commands.UpdateCoffee;
 using AutoMapper;
 using Domain.Entities;
 
@@ -11,6 +13,9 @@ namespace Application.Mapping
             CreateMap<CoffeeType, CoffeeTypeDTO>().ReverseMap();
 
             CreateMap<CoffeeIngredient, CoffeeIngredientDTO>().ReverseMap();
+
+            CreateMap<AddCoffeeDTO, AddCoffeeCommand>();
+            CreateMap<UpdateCoffeeDTO, UpdateCoffeeCommand>();
         }
     }
 }

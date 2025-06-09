@@ -5,6 +5,7 @@ using Application.Features.Commands.DeleteCoffee;
 using Application.Features.Commands.UpdateCoffee;
 using Application.Features.Queries.GetAllCoffees;
 using Application.Features.Queries.GetSingleCoffee;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -14,12 +15,14 @@ namespace CoffeeVendingMachineUnitTests.ControllerTests
     public class CoffeeControllerTests
     {
         private readonly Mock<IMediator> _mediatorMock;
+        private readonly Mock<IMapper> _mapperMock;
         private readonly CoffeeController _controller;
 
         public CoffeeControllerTests()
         {
             _mediatorMock = new Mock<IMediator>();
-            _controller = new CoffeeController(_mediatorMock.Object);
+            _mapperMock = new Mock<IMapper>();
+            _controller = new CoffeeController(_mediatorMock.Object, _mapperMock.Object);
         }
 
         [Fact]
@@ -66,12 +69,14 @@ namespace CoffeeVendingMachineUnitTests.ControllerTests
         {
             // Arrange
             var coffeeId = Guid.NewGuid();
-            var command = new AddCoffeeCommand { Name = "Espresso", CoffeeIngredient = new CoffeeIngredientDTO() };
+            var dto = new AddCoffeeDTO { Name = "Espresso", CoffeeIngredient = new CoffeeIngredientDTO() };
+            var command = new AddCoffeeCommand { Name = dto.Name, CoffeeIngredient = dto.CoffeeIngredient };
+            _mapperMock.Setup(m => m.Map<AddCoffeeCommand>(dto)).Returns(command);
             _mediatorMock.Setup(m => m.Send(It.IsAny<AddCoffeeCommand>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(coffeeId);
 
             // Act
-            var result = await _controller.AddCoffee(command);
+            var result = await _controller.AddCoffee(dto);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
@@ -100,9 +105,8 @@ namespace CoffeeVendingMachineUnitTests.ControllerTests
         {
             // Arrange
             var coffeeId = Guid.NewGuid();
-            var command = new UpdateCoffeeCommand
+            var dto = new UpdateCoffeeDTO
             {
-                Id = coffeeId,
                 Name = "Updated Espresso",
                 CoffeeIngredient = new CoffeeIngredientDTO
                 {
@@ -113,18 +117,24 @@ namespace CoffeeVendingMachineUnitTests.ControllerTests
                     CoconutMilk = false
                 }
             };
+            var command = new UpdateCoffeeCommand
+            {
+                Id = coffeeId,
+                Name = dto.Name,
+                CoffeeIngredient = dto.CoffeeIngredient
+            };
             var updatedCoffee = new CoffeeTypeDTO
             {
                 Id = coffeeId,
                 Name = "Updated Espresso",
                 CoffeeIngredient = command.CoffeeIngredient
             };
-
+            _mapperMock.Setup(m => m.Map<UpdateCoffeeCommand>(dto)).Returns(command);
             _mediatorMock.Setup(m => m.Send(It.Is<UpdateCoffeeCommand>(c => c.Id == coffeeId), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(updatedCoffee);
 
             // Act
-            var result = await _controller.UpdateCoffee(coffeeId, command);
+            var result = await _controller.UpdateCoffee(coffeeId, dto);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
