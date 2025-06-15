@@ -1,9 +1,9 @@
 import axios from "axios";
-import * as service from "../services/coffeeService";
+import * as service from "../../services/coffeeService";
 import {
   CoffeeTypeCreateDTO,
   CoffeeTypeDTO,
-} from "../interfaces/interfaces";
+} from "../../interfaces/interfaces";
 
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;

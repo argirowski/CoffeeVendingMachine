@@ -1,4 +1,4 @@
-import { validationSchema } from "../utils/formUtils";
+import { validationSchema } from "../../utils/formUtils";
 
 describe("validationSchema", () => {
   it("validates a correct object", async () => {
